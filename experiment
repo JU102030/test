@@ -104,7 +104,7 @@ while main_menu != 6:
         standard_deviations = {}
 
         for location, levels in radiation_levels.items():
-            if len(radiation_levels[location]) == 1:
+            if len(radiation_levels[location]) <= 1:
                 standard_deviations[location] = "at least two recordings are required."
             else:
                 standard_deviations[location] = round(statistics.stdev(levels),2)
