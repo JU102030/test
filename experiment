@@ -1,0 +1,122 @@
+# pylint: disable=C0103
+import statistics
+
+def add_record (rad_dict, location_to_add, record):
+    ''' adds new location and levels '''
+    rad_dict[location_to_add] = record
+    return rad_dict
+
+def remove_record (rad_dict, location_to_remove):
+    ''' removes given location and levels '''
+    del rad_dict[location_to_remove]
+    return rad_dict
+
+# ORIGINAL DATA
+radiation_levels = {'City Center': [22,19,20,31,28],
+                    'Industrial Zone': [35,32,30,37,40],
+                    'Residential District': [15,12,18,20,14],
+                    'Rural Outskirts': [9,13,16,14,7],
+                    'Downtown': [25,18,22,21,26]}
+
+#add_record(radiation_levels, 'Forrests', [12,13,14,15,16])
+#remove_record(radiation_levels, 'Forrests')
+
+main_menu = 0
+while main_menu != 6:
+    print("1. Display stored locations and radiation levels.")
+    print("2. Add new location and radiation levels.")
+    print("3. Remove existing location and radiation levels.")
+    print("4. Display Average Radiatin levels per location.")
+    print("5. Displays Standard Deviations per location.")
+    print("6. Exit the program.")
+    main_menu = int(input("Menu Choice (1-6): "))
+
+    if main_menu == 1:
+        print("**********************************************")
+        print("RADIATION LEVELS")
+        print("**********************************************")
+        for location, levels in radiation_levels.items():
+            print(f"- {location}\nLevels: {radiation_levels[location]}")
+        print("**********************************************")
+
+    elif main_menu == 2:
+        # Asking user to enter new location, and radiation level measurements
+        while True:
+            temp_location = input("Please enter new location name or exit:\n")
+            if temp_location == "":
+                print("Invalid input.")
+            else:
+                break
+
+        if temp_location != "exit":
+            temp_measurements = []
+            while True:
+                measurement = input("Enter radiation level or type 'done' to finish: ")
+                if measurement == 'done':
+                    break
+                try:
+                    temp_measurements.append(int(measurement))
+                    print(f"Input {measurement} added.")
+                except ValueError:
+                    print(f"Invalid input: {measurement}")
+
+            if len(temp_measurements) == 0:
+                print("Exiting without saving.")
+            else:
+                add_record(radiation_levels, temp_location, temp_measurements)
+                print("**********************************************")
+                print(f"Saved: Location: {temp_location}, Levels: {temp_measurements}")
+                print("**********************************************")
+    elif main_menu == 3:
+        
+        print("**********************************************")
+        print("STORED RADIATION LEVELS:")
+        print("**********************************************")
+        for i,key in enumerate(radiation_levels):
+            print(f"{i+1} {key} - Levels: {radiation_levels[key]}")
+        print("**********************************************")
+        remove_choice = input(f"Enter menu number between 1 and {(len(radiation_levels))} to delete: ")
+        for i,key in enumerate(radiation_levels):
+            if i == int(remove_choice) - 1:
+                remove_record(radiation_levels, key)
+                print("**********************************************")
+                print(f"{key} removed.")
+                print("**********************************************")
+                break
+
+    elif main_menu == 4:
+
+        # CALCULATING AND PRINTING AVERAGE RADIATION LEVELS
+        average_levels = {}
+
+        for location, levels in radiation_levels.items():
+            average_levels[location] = sum(levels)/len(levels)
+
+        print("**********************************************")
+        print("AVERAGE RADIATION LEVELS")
+        print("**********************************************")
+        for location, average_level in average_levels.items():
+            print(f"- {location} \nLevels: {radiation_levels[location]}, Average: {average_level}")
+        print("**********************************************")
+
+    elif main_menu == 5:
+        # CALCULATING AND PRINTING STANDARD DEVIATIONS
+        standard_deviations = {}
+
+        for location, levels in radiation_levels.items():
+            if len(radiation_levels[location]) > 1:
+                standard_deviations[location] = round(statistics.stdev(levels),2)
+        else:
+            standard_deviations[location] = "at least two recordings are required."
+
+        print("**********************************************")
+        print("STANDARD DEVIATIONS")
+        print("**********************************************")
+        for location, standard_deviation in standard_deviations.items():
+            print(f"- {location}\nLevels: {radiation_levels[location]}, Standard Deviation: {standard_deviation}")
+        print("**********************************************")
+
+    elif main_menu == 6:
+        break
+    else:
+        print("Invalid choice, please enter between 1 and 6.")
