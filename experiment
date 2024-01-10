@@ -1,4 +1,3 @@
-# pylint: disable=C0103
 import statistics
 
 def add_record (rad_dict, location_to_add, record):
